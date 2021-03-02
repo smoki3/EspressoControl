@@ -60,7 +60,7 @@ void Button::update(){
 			}
 		}
 		if(stateChange){
-			Serial.println("State changed");
+			//Serial.println("State changed");
 			//falling edge
 			if(state){
 				if(millis() >= lastChangeTime + longPressTime){

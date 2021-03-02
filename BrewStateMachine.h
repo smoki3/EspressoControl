@@ -13,13 +13,14 @@
 #include "Arduino.h"
 
 class BrewStateMachine {
-	enum BrewStates {idle, dist_man, refill_boiler, dist_vol, dist_vol_finished, error_tank_empty, error_probe,
-		preinf_buildup, preinf_wait, cleaning_buildup, cleaning_flushing};
+	enum BrewStates {idle, dist_man, refill_boiler, dist_vol, dist_vol_finished, dist_tim, dist_tim_finished, error_tank_empty, error_probe,
+		preinf_buildup, preinf_wait, cleaning_buildup, cleaning_flushing, cooling_flush };
 public:
 	BrewStateMachine();
 	bool isBrewing();
 	bool isPreinfusing();
 	bool isCleaning();
+	bool isCoolingFlush();
 	int getCurrentCleaningCycle();
 	virtual ~BrewStateMachine();
 	void update();

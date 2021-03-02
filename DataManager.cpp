@@ -38,6 +38,8 @@ bool DataManager::blynkInitialized;
 unsigned long DataManager::lastWifiConnectTryTime;
 int DataManager::preinfusionBuildupTime;
 int DataManager::preinfusionWaitTime;
+int DataManager::distributionTime;
+int DataManager::coolingFlushTime;
 unsigned long DataManager::standbyWakeupTime;
 int DataManager::standbyStartTime;
 DeviceControl* DataManager::dev;
@@ -67,6 +69,8 @@ double DataManager::bypassTickToVolumeFactor;
 			//in s, 0 to disable (Blynk time widget)
 //	V18: Pump flow sensor tick to volume factor
 //	V19: Bypass flow sensor tick to volume factor
+//	V20: distribution time
+//	V21: cooling flush time
 
 //	Flash address parameters
 #define SSID_MAX_LEN				30
@@ -93,10 +97,10 @@ double DataManager::bypassTickToVolumeFactor;
 #define	PREINFUSION_BUILDUP_TIME_LEN	sizeof(int)
 #define	PREINFUSION_WAIT_TIME_ADDR		146
 #define	PREINFUSION_WAIT_TIME_LEN		sizeof(int)
-#define STANDBY_START_TIME_ADDR		150
-#define	STANDBY_START_TIME_LEN		sizeof(int)
-#define STANDBY_WAKEUP_TIME_ADDR	154
-#define STANDBY_WAKEUP_TIME_LEN		sizeof(long)
+#define STANDBY_START_TIME_ADDR			150
+#define	STANDBY_START_TIME_LEN			sizeof(int)
+#define STANDBY_WAKEUP_TIME_ADDR		154
+#define STANDBY_WAKEUP_TIME_LEN			sizeof(long)
 #define PUMP_TICK_TO_VOL_FACTOR_ADDR	162
 #define PUMP_TICK_TO_VOL_FACTOR_LEN		sizeof(double)
 #define BYPASS_TICK_TO_VOL_FACTOR_ADDR	170
@@ -109,9 +113,13 @@ double DataManager::bypassTickToVolumeFactor;
 #define BU_CONTROLLER_I_LEN				sizeof(double)
 #define	BU_CONTROLLER_D_ADDR			202
 #define BU_CONTROLLER_D_LEN				sizeof(double)
+#define	DIST_TIME_ADDR					210
+#define DIST_TIME_LEN					sizeof(int)
+#define	COOLING_FLUSH_TIME_ADDR			214
+#define	COOLING_FLUSH_TIME_LEN			sizeof(int)
 
 
-#define CHECKSUM_ADDR				210
+#define CHECKSUM_ADDR				218
 #define	CHECKSUM_LEN				4
 #define	EEPROM_SIZE					250
 char ssid[SSID_MAX_LEN+1];
@@ -166,6 +174,8 @@ void DataManager::init(){
 	eepromRead((uint8_t*)&standbyStartTime, STANDBY_START_TIME_ADDR, STANDBY_START_TIME_LEN);
 	eepromRead((uint8_t*)&pumpTickToVolumeFactor, PUMP_TICK_TO_VOL_FACTOR_ADDR, PUMP_TICK_TO_VOL_FACTOR_LEN);
 	eepromRead((uint8_t*)&bypassTickToVolumeFactor, BYPASS_TICK_TO_VOL_FACTOR_ADDR, BYPASS_TICK_TO_VOL_FACTOR_LEN);
+	eepromRead((uint8_t*)&distributionTime, DIST_TIME_ADDR, DIST_TIME_LEN);
+	eepromRead((uint8_t*)&coolingFlushTime, COOLING_FLUSH_TIME_ADDR, COOLING_FLUSH_TIME_LEN);
 	standbyWakeupTime = 0;
 	standbyWakeupEnabled = false;
 //	Serial.println("Boiler target: " + String(targetTempBoiler));
@@ -177,7 +187,8 @@ void DataManager::init(){
 //	Serial.println("password: " + String(password));
 
 	//enter wifi setup mode
-	if(dev->readButtonManDist() && dev->readButton1() && dev->readButton2()){
+	if(dev->readButtonManDist() && dev->readButtonVolDist() && dev->readButton2()){
+		Serial.println("WiFi Setup Mode");
 		WIFISetupMode();
 	}
 	//if wifi not intialized correctly, use default values
@@ -220,7 +231,7 @@ void DataManager::init(){
 			isnan(boilerControllerP) || isnan(boilerControllerI) || isnan(boilerControllerD) ||
 			isnan(BUControllerP) || isnan(BUControllerI) || isnan(BUControllerD) ||
 			isnan(preinfusionBuildupTime) || isnan(preinfusionWaitTime) || isnan(standbyStartTime) ||
-			isnan(pumpTickToVolumeFactor) || isnan(bypassTickToVolumeFactor)){
+			isnan(pumpTickToVolumeFactor) || isnan(bypassTickToVolumeFactor || isnan(distributionTime) || isnan(coolingFlushTime))){
 		Serial.println("Writing default values");
 		targetTempBoiler = DEFAULT_TEMP_BOILER;
 		targetTempBU = DEFAULT_TEMP_BU;
@@ -239,6 +250,8 @@ void DataManager::init(){
 		standbyWakeupTime = DEFAULT_STANDBY_WAKEUP_TIME;
 		pumpTickToVolumeFactor = DEFAULT_PUMP_TICK_TO_VOLUME_FACTOR;
 		bypassTickToVolumeFactor = DEFAULT_BYP_TICK_TO_VOLUME_FACTOR;
+		distributionTime = DEFAULT_DISTRIBUTION_TIME;
+		coolingFlushTime = DEFAULT_COOLING_FLUSH_TIME;
 		eepromWrite((uint8_t*)&targetTempBoiler, TARGET_TEMP_BOILER_ADDR, TARGET_TEMP_BOILER_LEN, false);
 		eepromWrite((uint8_t*)&targetTempBU, TARGET_TEMP_BU_ADDR, TARGET_TEMP_BU_LEN, false);
 		eepromWrite((uint8_t*)&distributionVolume, DIST_VOL_ADDR, DIST_VOL_LEN, false);
@@ -257,6 +270,8 @@ void DataManager::init(){
 		eepromWrite((uint8_t*)&standbyWakeupTime, STANDBY_WAKEUP_TIME_ADDR, STANDBY_WAKEUP_TIME_LEN, false);
 		eepromWrite((uint8_t*)&pumpTickToVolumeFactor, PUMP_TICK_TO_VOL_FACTOR_ADDR, PUMP_TICK_TO_VOL_FACTOR_LEN, false);
 		eepromWrite((uint8_t*)&bypassTickToVolumeFactor, BYPASS_TICK_TO_VOL_FACTOR_ADDR, BYPASS_TICK_TO_VOL_FACTOR_LEN, false);
+		eepromWrite((uint8_t*)&distributionTime, DIST_TIME_ADDR, DIST_TIME_LEN, false);
+		eepromWrite((uint8_t*)&coolingFlushTime, COOLING_FLUSH_TIME_ADDR, COOLING_FLUSH_TIME_LEN, false);
 		EEPROM.commit();
 	}
 
@@ -266,6 +281,11 @@ void DataManager::init(){
 		lastWifiConnectTryTime = millis();
 		delay(500);
 		if(WiFi.isConnected()){
+			Serial.println("WiFi connected");
+			Serial.print("SSID: ");
+			Serial.println(WiFi.SSID());
+			Serial.print("IP: ");
+			Serial.println(WiFi.localIP());
 			initBlynk();
 		}
 	}
@@ -290,8 +310,7 @@ void DataManager::update(){
 void DataManager::pushTempBoiler(double temp){
 	static long lastUpdateTime = 0;
 	if(DataManager::getBlynkEnabled() && blynkInitialized &&
-			(millis() >= lastUpdateTime+IDLE_BLYNK_MIN_TEMP_UPDATE_INTERVAL ||
-					millis() >= lastUpdateTime + BREWING_BLYNK_MIN_TEMP_UPDATE_INTERVAL)){
+			(millis() >= lastUpdateTime+IDLE_BLYNK_MIN_TEMP_UPDATE_INTERVAL)){
 		lastUpdateTime = millis();
 		Blynk.virtualWrite(V1, temp);
 	}
@@ -301,24 +320,11 @@ void DataManager::pushTempBoiler(double temp){
 void DataManager::pushTempBU(double temp){
 	static long lastUpdateTime = 0;
 	if(DataManager::getBlynkEnabled() && blynkInitialized &&
-			(millis() >= lastUpdateTime+IDLE_BLYNK_MIN_TEMP_UPDATE_INTERVAL ||
-					millis() >= lastUpdateTime + BREWING_BLYNK_MIN_TEMP_UPDATE_INTERVAL)){
+			(millis() >= lastUpdateTime+IDLE_BLYNK_MIN_TEMP_UPDATE_INTERVAL)){
 		lastUpdateTime = millis();
 		Blynk.virtualWrite(V2, temp);
 	}
 }
-
-/// sends the current tube temperature to blynk, if enabled
-void DataManager::pushTempTube(double temp){
-	static long lastUpdateTime = 0;
-	if(DataManager::getBlynkEnabled() && blynkInitialized &&
-			(millis() >= lastUpdateTime+IDLE_BLYNK_MIN_TEMP_UPDATE_INTERVAL ||
-					millis() >= lastUpdateTime + BREWING_BLYNK_MIN_TEMP_UPDATE_INTERVAL)){
-		lastUpdateTime = millis();
-		Blynk.virtualWrite(V3, temp);
-	}
-}
-
 
 double DataManager::getTargetTempBoiler(){
 	return targetTempBoiler;
@@ -376,6 +382,48 @@ long DataManager::getFillBoilerOverSondeTime(){
 
 long DataManager::getBoilerMaxFillTime(){
 	return boilerMaxFillTime;
+}
+
+int DataManager::getCoolingFlushTime(){
+	return coolingFlushTime;
+}
+
+/// saves a new target distribution volume
+// @param volume: the new target volume
+// @param updateBlynk: sends the new value to blynk, if set to true and blynk is enabled
+void DataManager::setCoolingFlushTime(int time, bool updateBlynk){
+	if(time > MAX_COOLING_FLUSH_TIME) time = MAX_COOLING_FLUSH_TIME;
+	else if(time < MIN_COOLING_FLUSH_TIME) time = MIN_COOLING_FLUSH_TIME;
+	if(coolingFlushTime == time){
+		return;
+	}
+
+	coolingFlushTime = time;
+	eepromWrite((uint8_t*)&coolingFlushTime, COOLING_FLUSH_TIME_ADDR, COOLING_FLUSH_TIME_LEN, true);
+	if(getBlynkEnabled() && blynkInitialized && updateBlynk){
+		Blynk.virtualWrite(V21, coolingFlushTime/1000);
+	}
+}
+
+int DataManager::getDistributionTime(){
+	return distributionTime;
+}
+
+/// saves a new target distribution volume
+// @param volume: the new target volume
+// @param updateBlynk: sends the new value to blynk, if set to true and blynk is enabled
+void DataManager::setDistributionTime(int time, bool updateBlynk){
+	if(time > MAX_DISTRIBUTION_TIME) time = MAX_DISTRIBUTION_TIME;
+	else if(time < MIN_DISTRIBUTION_TIME) time = MIN_DISTRIBUTION_TIME;
+	if(distributionTime == time){
+		return;
+	}
+
+	distributionTime = time;
+	eepromWrite((uint8_t*)&distributionTime, DIST_TIME_ADDR, DIST_TIME_LEN, true);
+	if(getBlynkEnabled() && blynkInitialized && updateBlynk){
+		Blynk.virtualWrite(V20, distributionTime/1000);
+	}
 }
 
 double DataManager::getDistributionVolume(){
@@ -618,7 +666,8 @@ void DataManager::initBlynk(){
 	setSyncInterval(10 * 60); // Sync interval for RTC in seconds (10 minutes)
 	Blynk.virtualWrite(V18, pumpTickToVolumeFactor);
 	Blynk.virtualWrite(V19, bypassTickToVolumeFactor);
-
+	Blynk.virtualWrite(V20, distributionTime/1000);
+	Blynk.virtualWrite(V21, coolingFlushTime/1000);
 	blynkInitialized = true;
 }
 
@@ -796,6 +845,13 @@ BLYNK_WRITE(V18){
 
 BLYNK_WRITE(V19){
 	DataManager::setBypassTickToVolumeFactor(param.asDouble(), false);
+}
+
+BLYNK_WRITE(V20){
+	DataManager::setDistributionTime((int)(param.asDouble()*1000), false);
+}
+BLYNK_WRITE(V21){
+	DataManager::setCoolingFlushTime((int)(param.asDouble()*1000), false);
 }
 
 BLYNK_CONNECTED() {

@@ -12,6 +12,7 @@
 MachineStatusStateMachine* MachineStatusStateMachine::_instance = NULL;
 
 MachineStatusStateMachine::MachineStatusStateMachine() {
+	Serial.println("Status: running");
 	state = running;
 	lastUserActionTime = millis();
 	dev = DeviceControl::instance();
@@ -47,6 +48,7 @@ void MachineStatusStateMachine::update(){
 		}
 		//wakeup by useraction
 		else if(useraction){
+			Serial.println("Status: running");
 			state = running;
 			lastUserActionTime = millis();
 		}
@@ -65,6 +67,7 @@ void MachineStatusStateMachine::update(){
 		if(dev->getButton1ShortPressed() ||
 				(millis() > lastUserActionTime + DataManager::getStandbyStartTime() &&
 						DataManager::getStandbyStartTime() != 0)){
+			Serial.println("Status: standby");
 			state = standby;
 		}
 		break;

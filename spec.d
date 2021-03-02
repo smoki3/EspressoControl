@@ -1,2 +1,2 @@
 spec.o: \
- /media/persDat/Mikrocontroller/Sloeber/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/spec.C
+ /Users/kevinbayer/Development/eclipse-workspace/.metadata/.plugins/org.eclipse.cdt.managedbuilder.core/spec.cpp

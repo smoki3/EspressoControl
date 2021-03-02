@@ -27,10 +27,18 @@
 
 #define	DEFAULT_DISTRIBUTION_VOLUME				30
 #define	MAX_DISTRIBUTION_VOLUME					200
-#define	MIN_DISTRIBUTION_VOLUME					1
+#define	MIN_DISTRIBUTION_VOLUME					0
 #define DEFAULT_VOLUME_OFFSET					5
 #define	MAX_VOLUME_OFFSET						100
 #define	MIN_VOLUME_OFFSET						0
+
+#define	DEFAULT_DISTRIBUTION_TIME				25000
+#define	MAX_DISTRIBUTION_TIME					200000
+#define	MIN_DISTRIBUTION_TIME					10000
+
+#define	DEFAULT_COOLING_FLUSH_TIME				5000
+#define	MAX_COOLING_FLUSH_TIME					50000
+#define	MIN_COOLING_FLUSH_TIME					0000
 
 #define	DEFAULT_BLYNK_ENABLED					true
 
@@ -69,7 +77,6 @@ class DataManager {
 public:
 	static void pushTempBoiler(double temp);
 	static void pushTempBU(double temp);
-	static void pushTempTube(double temp);
 
 	static double getTargetTempBoiler();
 	static double getTargetTempBU();
@@ -103,6 +110,10 @@ public:
 	static void setPreinfusionBuildupTime(int time, bool updateBlynk);
 	static int getPreinfusionWaitTime();
 	static void setPreinfusionWaitTime(int time, bool updateBlynk);
+	static int getCoolingFlushTime();
+	static void setCoolingFlushTime(int time, bool updateBlynk);
+	static int getDistributionTime();
+	static void setDistributionTime(int time, bool updateBlynk);
 
 	static void setStandbyStartTime(int time, bool updateBlynk);
 	static int getStandbyStartTime();
@@ -148,6 +159,8 @@ private:
 
 	static int preinfusionBuildupTime;
 	static int preinfusionWaitTime;
+	static int distributionTime;
+	static int coolingFlushTime;
 	static unsigned long standbyWakeupTime;
 	static int standbyStartTime;	//time after wich standby mode will be entered
 	static bool standbyWakeupEnabled;	//used to disable wakeup functionality
@@ -164,4 +177,3 @@ private:
 	static unsigned long lastWifiConnectTryTime;
 };
 #endif /* DATAMANAGER_H_ */
-

@@ -10,15 +10,11 @@
 
 DeviceControl* DeviceControl::_instance = NULL;
 
-static TSIC *tsicBoiler;
 static TSIC *tsicBU;
-static TSIC *tsicTube;
 static volatile long pumpTicks;
 static volatile long bypassTicks;
 
-void IRAM_ATTR tsicBoilerWrapper(){tsicBoiler->TSIC_ISR();}
 void IRAM_ATTR tsicBUWrapper(){tsicBU->TSIC_ISR();}
-void IRAM_ATTR tsicTubeWrapper(){tsicTube->TSIC_ISR();}
 void IRAM_ATTR pumpFlowmeterISR(){pumpTicks++;}
 void IRAM_ATTR bypassFlowmeterISR(){bypassTicks++;}
 
@@ -30,6 +26,7 @@ DeviceControl::~DeviceControl() {
 }
 
 MCP23017 mcp = MCP23017(MCP_ADDR);
+Adafruit_ADS1115 ads(ADS_ADDR);
 /// initializes all pins and interrupts etc. necessary
 void DeviceControl::init(){
 	Wire.begin();
@@ -48,6 +45,9 @@ void DeviceControl::init(){
 	buttonManDist = new Button([](){return DeviceControl::instance()->readButtonManDist();});
 
 	mcp.init();
+
+	ads.begin();
+	ads.setGain(GAIN_ONE); // 2x gain       0.0625mV
 
     BUHeaterOff(false);
     boilerHeaterOff(false);
@@ -69,22 +69,15 @@ void DeviceControl::init(){
 
     mcpReadBuffer = mcp.read();
 
-	pinMode(TEMP_BOILER_PIN, INPUT);
 	pinMode(TEMP_BU_PIN, INPUT);
-	pinMode(TEMP_TUBE_PIN, INPUT);
 	pinMode(FLOW_PUMP_PIN, INPUT);
 	pinMode(FLOW_RET_PIN, INPUT);
 	pinMode(PROBE_DIGITAL_PIN, INPUT);
 	pinMode(TFT_LED, OUTPUT);
 	digitalWrite(TFT_LED, LOW);
 
-
-	tsicBoiler = new TSIC(TEMP_BOILER_PIN);
 	tsicBU = new TSIC(TEMP_BU_PIN);
-	tsicTube = new TSIC(TEMP_TUBE_PIN);
-	attachInterrupt(TEMP_BOILER_PIN, tsicBoilerWrapper, CHANGE);
 	attachInterrupt(TEMP_BU_PIN, tsicBUWrapper, CHANGE);
-	attachInterrupt(TEMP_TUBE_PIN, tsicTubeWrapper, CHANGE);
 	attachInterrupt(FLOW_PUMP_PIN, pumpFlowmeterISR, RISING);
 	attachInterrupt(FLOW_RET_PIN, bypassFlowmeterISR, RISING);
 }
@@ -147,7 +140,6 @@ void DeviceControl::update(){
 	button2->update();
 	buttonManDist->update();
 	buttonVolDist->update();
-
 }
 
 /// enables the boiler heater
@@ -366,27 +358,29 @@ double DeviceControl::getBypassVolume(){
 }
 
 double	DeviceControl::getBoilerTemp(){
-	return tsicBoiler->getTemperature();
+	ads.setGain(GAIN_ONE);
+	adsVoltageMain = ads.readADC_SingleEnded(0);
+	adsVoltageMain = (adsVoltageMain * 0.125)/1000;		//Get Power Supply Voltage
+	ads.setGain(GAIN_TWO);
+	adsVoltageNTC = ads.readADC_SingleEnded(1);
+	adsVoltageNTC = (adsVoltageNTC * 0.0625)/1000;		//Get NTC Voltage
+	adsRes = (adsVoltageNTC * RESISTOR_VALUE)/(adsVoltageMain - adsVoltageNTC);
+	adsTemp = (1/(((double)1/298.15)+((double)1/NTC_BETA_VALUE)*log((double)adsRes/RESISTOR_VALUE))) - 273.15;
+	return adsTemp;
+}
+
+bool DeviceControl::getBoilerTempSensorError(){
+	if (getBoilerTemp() <= NTC_SAFE_TEMP_MIN || getBoilerTemp() > NTC_SAFE_TEMP_MAX)
+		return true;
+	return false;
 }
 
 double DeviceControl::getBUTemp(){
 	return tsicBU->getTemperature();
 }
 
-double DeviceControl::getTubeTemp(){
-	return tsicTube->getTemperature();
-}
-
-bool DeviceControl::getBoilerTempSensorError(){
-	return tsicBoiler->sensorError();
-}
-
 bool DeviceControl::getBUTempSensorError(){
 	return tsicBU->sensorError();
-}
-
-bool DeviceControl::getTubeTempSensorError(){
-	return tsicTube->sensorError();
 }
 
 bool DeviceControl::getBoilerFillSensorError(){

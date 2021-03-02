@@ -10,24 +10,25 @@
 
 #define SR_SER				22
 #define	SR_SCK				19
-#define	SR_RCK				21
+#define	SR_RCK				20
 
 #define MCP_SCL				22
 #define MCP_SDA				21
 #define MCP_ADDR			0x21
+#define ADS_ADDR			0x48
 
 #define	BU_VALVE			9
-#define BU_VALVE_LOW_LEVEL_TRIGGER
+//#define BU_VALVE_LOW_LEVEL_TRIGGER
 #define	BOILER_VALVE		8
-#define BOILER_VALVE_LOW_LEVEL_TRIGGER
+//#define BOILER_VALVE_LOW_LEVEL_TRIGGER
 #define	PUMP				10
-#define PUMP_LOW_LEVEL_TRIGGER
+//#define PUMP_LOW_LEVEL_TRIGGER
 #define	BOILER_HEATER		2
 //#define BOILER_HEATER_LOW_LEVEL_TRIGGER
 #define	BU_HEATER			11
-#define BU_HEATER_LOW_LEVEL_TRIGGER
+//#define BU_HEATER_LOW_LEVEL_TRIGGER
 #define	EXP_VALVE			1
-#define EXP_VALVE_LOW_LEVEL_TRIGGER
+//#define EXP_VALVE_LOW_LEVEL_TRIGGER
 
 #define	LED_LEFT			4
 #define	LED_POWER			5

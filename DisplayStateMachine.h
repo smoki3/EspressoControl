@@ -58,7 +58,6 @@ private:
 	int displayedWeight = -1;
 	String displayedBoilerTemp = "";
 	String displayedBUTemp = "";
-	String displayedTubeTemp = "";
 	bool blynkDisplayed = false;
 	bool noWifiDisplayed = false;
 
@@ -66,7 +65,6 @@ private:
 	void drawBackground();
 	void displayBoilerTemp(float temp, bool sensorError);
 	void displayBUTemp(float temp, bool sensorError);
-	void displayTubeTemp(float temp, bool sensorError);
 	void displayTime(int time);
 	void displayWeight(int weight);
 };

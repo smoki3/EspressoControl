@@ -79,25 +79,21 @@ void DisplayStateMachine::update(){
 		if(millis() >= lastTempUpdateTime + TEMP_UPDATE_INTERVAL_IDLE){
 			displayBoilerTemp(dev->getBoilerTemp(), dev->getBoilerTempSensorError());
 			displayBUTemp(dev->getBUTemp(), dev->getBUTempSensorError());
-			displayTubeTemp(dev->getTubeTemp(), dev->getTubeTempSensorError());
 			lastTempUpdateTime = millis();
 		}
 
 		// count time up after cooling flush
-		if(coolingFlush && brewingStartTime > 0){
-			if((millis()-brewingStartTime)/1000 >= 99)
-				coolingFlush = false;
-			displayTime((millis()-brewingStartTime)/1000);
-		}
-		if(dev->getButton2ShortPressed()){
-			if(!coolingFlush){
-				coolingFlush = true;
-				brewingStartTime = 0;
-			}
-			else{
+		if(coolingFlush && !brewMachine->isCoolingFlush()){
+			if((millis()-brewingStartTime)/1000 >= 99){
 				coolingFlush = false;
 				displayTime(0);
 			}
+			displayTime((millis()-brewingStartTime)/1000);
+		}
+
+		if(brewMachine->isCoolingFlush() && coolingFlush == false){
+			coolingFlush = true;
+			brewingStartTime = 0;
 		}
 
 		//transitions
@@ -131,7 +127,6 @@ void DisplayStateMachine::update(){
 		if(millis() >= lastTempUpdateTime + TEMP_UPDATE_INTERVAL_BREWING){
 			displayBoilerTemp(dev->getBoilerTemp(), dev->getBoilerTempSensorError());
 			displayBUTemp(dev->getBUTemp(), dev->getBUTempSensorError());
-			displayTubeTemp(dev->getTubeTemp(), dev->getTubeTempSensorError());
 			lastTempUpdateTime = millis();
 		}
 		if(brewMachine->isBrewing()){// do not update time during preinfusion
@@ -141,16 +136,9 @@ void DisplayStateMachine::update(){
 				DataManager::getVolumeOffset();
 		displayWeight(weight>=0?weight:0);	//display 0 while weight smaller than zero
 
-		if(dev->getButton2ShortPressed()){
-			coolingFlush = true;
-		}
-
 		//transitions
 		if(!brewMachine->isBrewing() && !brewMachine->isPreinfusing()){
 			state = idle;
-			if(coolingFlush){
-				brewingStartTime = millis();
-			}
 		}
 		break;
 	}
@@ -158,7 +146,6 @@ void DisplayStateMachine::update(){
 		if(millis() >= lastTempUpdateTime + TEMP_UPDATE_INTERVAL_IDLE){
 			displayBoilerTemp(dev->getBoilerTemp(), dev->getBoilerTempSensorError());
 			displayBUTemp(dev->getBUTemp(), dev->getBUTempSensorError());
-			displayTubeTemp(dev->getTubeTemp(), dev->getTubeTempSensorError());
 			lastTempUpdateTime = millis();
 		}
 		displayTime(0);
@@ -181,7 +168,6 @@ void DisplayStateMachine::update(){
 			displayedWeight = -1;
 			displayedBoilerTemp = "";
 			displayedBUTemp = "";
-			displayedTubeTemp = "";
 			drawBackground();
 			state = idle;
 		}
@@ -215,28 +201,6 @@ void DisplayStateMachine::displayBoilerTemp(float temp, bool sensorError){
 	}
 	else{
 		tft.setCursor(TEXT_RED_X, TEXT_RED_Y);
-	}
-	tft.print(puffer);
-}
-
-void DisplayStateMachine::displayTubeTemp(float temp, bool sensorError){
-	char puffer[7];
-	dtostrf(temp, 2, 1, puffer);
-	if(sensorError)
-		strcpy(puffer, "error");
-	if(displayedTubeTemp.equals(puffer)){
-		return;
-	}
-	if(!sensorError)
-		DataManager::pushTempTube(temp);
-	displayedTubeTemp = String(puffer);
-	tft.pushImage(TEXT_BLUE_X, TEXT_BLUE_Y, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT, background_blue);
-//	tft.setCursor(124,71);
-	if(displayedTubeTemp.length() < 5){
-		tft.setCursor(TEXT_BLUE_X + LETTER_WIDTH/2, TEXT_BLUE_Y);
-	}
-	else{
-		tft.setCursor(TEXT_BLUE_X, TEXT_BLUE_Y);
 	}
 	tft.print(puffer);
 }

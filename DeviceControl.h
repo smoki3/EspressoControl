@@ -14,11 +14,16 @@
 #include "MCP23017.h"
 #include "Wire.h"
 #include "Button.h"
+#include "Adafruit_ADS1015.h"
 
 #define SSR_PERIOD_TIME			5000
 #define	BUTTON_DEPRELL_TIME		300
 #define DIST_SWITCH_DEPRELL_TIME	100
 #define	BUTTON_LONG_PRESS_TIME	3000
+#define	NTC_BETA_VALUE	3950
+#define	RESISTOR_VALUE	10000
+#define	NTC_SAFE_TEMP_MIN	15
+#define	NTC_SAFE_TEMP_MAX	140
 
 class DeviceControl {
 public:
@@ -64,11 +69,9 @@ public:
 	double getBypassVolume();
 
 	double getBoilerTemp();
-	double getBUTemp();
-	double getTubeTemp();
+	double getBUTemp();;
 	bool getBoilerTempSensorError();
 	bool getBUTempSensorError();
-	bool getTubeTempSensorError();
 
 	void enableLEDLeft();
 	void disableLEDLeft();
@@ -96,6 +99,11 @@ private:
 
 	uint16_t mcpWriteBuffer;
 	uint16_t mcpReadBuffer;
+
+	double adsVoltageNTC;
+	double adsVoltageMain;
+	double adsRes;
+	double adsTemp;
 
 	unsigned long boilerPeriodStartTime;
 	int boilerLevel;

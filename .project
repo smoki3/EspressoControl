@@ -34,67 +34,82 @@
 		<link>
 			<name>core/core</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/cores/esp32</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/cores/esp32</locationURI>
 		</link>
 		<link>
 			<name>core/variant</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/variants/nodemcu-32s</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/variants/nodemcu-32s</locationURI>
+		</link>
+		<link>
+			<name>libraries/Adafruit_ADS1X15</name>
+			<type>2</type>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/Adafruit_ADS1X15</location>
+		</link>
+		<link>
+			<name>libraries/AsyncTCP</name>
+			<type>2</type>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/AsyncTCP</location>
 		</link>
 		<link>
 			<name>libraries/Blynk</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/Blynk/0.6.1</locationURI>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/Blynk</location>
 		</link>
 		<link>
 			<name>libraries/EEPROM</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/libraries/EEPROM</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/libraries/EEPROM</locationURI>
+		</link>
+		<link>
+			<name>libraries/ESPAsyncWebServer</name>
+			<type>2</type>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/ESPAsyncWebServer</location>
 		</link>
 		<link>
 			<name>libraries/FS</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/libraries/FS</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/libraries/FS</locationURI>
 		</link>
 		<link>
 			<name>libraries/MCP23017</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/MCP23017/1.1.2</locationURI>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/MCP23017</location>
 		</link>
 		<link>
 			<name>libraries/PID</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/PID/1.2.0</locationURI>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/PID</location>
 		</link>
 		<link>
 			<name>libraries/SPI</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/libraries/SPI</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/libraries/SPI</locationURI>
 		</link>
 		<link>
 			<name>libraries/SPIFFS</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/libraries/SPIFFS</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/libraries/SPIFFS</locationURI>
 		</link>
 		<link>
 			<name>libraries/TFT_eSPI</name>
 			<type>2</type>
-			<location>/home/tsugua/Arduino/libraries/TFT_eSPI</location>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/TFT_eSPI</location>
 		</link>
 		<link>
 			<name>libraries/Time</name>
 			<type>2</type>
-			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/Time/1.5.0</locationURI>
+			<location>/Users/kevinbayer/Development/Arduino/libraries/Time</location>
 		</link>
 		<link>
 			<name>libraries/WiFi</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/libraries/WiFi</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/libraries/WiFi</locationURI>
 		</link>
 		<link>
 			<name>libraries/Wire</name>
 			<type>2</type>
-			<locationURI>WORKSPACE_LOC/arduino-esp32/libraries/Wire</locationURI>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/libraries/Wire</locationURI>
 		</link>
 	</linkedResources>
 </projectDescription>
