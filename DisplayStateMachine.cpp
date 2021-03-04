@@ -85,15 +85,21 @@ void DisplayStateMachine::update(){
 		// count time up after cooling flush
 		if(coolingFlush && !brewMachine->isCoolingFlush()){
 			if((millis()-brewingStartTime)/1000 >= 99){
-				coolingFlush = false;
 				displayTime(0);
+				brewingStartTime = 0;
+				coolingFlush = false;
 			}
-			displayTime((millis()-brewingStartTime)/1000);
+			else if (brewingStartTime == 0){
+				brewingStartTime = millis();
+			}
+			else{
+				displayTime((millis()-brewingStartTime)/1000);
+			}
 		}
 
-		if(brewMachine->isCoolingFlush() && coolingFlush == false){
-			coolingFlush = true;
+		if(brewMachine->isCoolingFlush()){
 			brewingStartTime = 0;
+			coolingFlush = true;
 		}
 
 		//transitions
@@ -104,14 +110,12 @@ void DisplayStateMachine::update(){
 			state = standby;
 		}
 		else if(brewMachine->isBrewing() || brewMachine->isPreinfusing()){
-			if(coolingFlush && brewingStartTime > 0){
-				coolingFlush = false;
-			}
 			brewingStartTime = 0;
 			brewingStartPumpVolume = dev->getPumpVolume();
 			brewingStartBypassVolume = dev->getBypassVolume();
 			displayTime(0);
 			displayWeight(0);
+			coolingFlush = false;
 			state = brewing;
 		}
 		else if(brewMachine->isCleaning()){
