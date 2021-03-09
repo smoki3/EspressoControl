@@ -25,8 +25,9 @@
 #define	TEMP_UPDATE_INTERVAL_BREWING	500
 
 
-#define TEXT_BLUE_X		116
-#define	TEXT_BLUE_Y		71
+#define TEXT_BLUE_X		160
+#define	TEXT_BLUE_Y		61
+#define	TEXT_BLUE_Y2	95
 #define TEXT_RED_X		29
 #define	TEXT_RED_Y		179
 #define	TEXT_ORANGE_X	210
@@ -48,6 +49,7 @@ private:
 	TFT_eSPI tft = TFT_eSPI();
 	uint16_t background_red[TEXT_BACKGROUND_WIDTH*TEXT_BACKGROUND_HEIGHT];
 	uint16_t background_blue[TEXT_BACKGROUND_WIDTH*TEXT_BACKGROUND_HEIGHT];
+	uint16_t background_blue2[TEXT_BACKGROUND_WIDTH*TEXT_BACKGROUND_HEIGHT];
 	uint16_t background_orange[TEXT_BACKGROUND_WIDTH*TEXT_BACKGROUND_HEIGHT];
 
 	DeviceControl *dev;

@@ -27,6 +27,7 @@ void DisplayStateMachine::init(){
 
 	readBackground((uint16_t*)image_data_Background_V2_no_symbol, background_red, 320, TEXT_RED_X, TEXT_RED_Y, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT);
 	readBackground((uint16_t*)image_data_Background_V2_no_symbol, background_blue, 320, TEXT_BLUE_X, TEXT_BLUE_Y, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT);
+	readBackground((uint16_t*)image_data_Background_V2_no_symbol, background_blue2, 320, TEXT_BLUE_X, TEXT_BLUE_Y2, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT);
 	readBackground((uint16_t*)image_data_Background_V2_no_symbol, background_orange, 320, TEXT_ORANGE_X, TEXT_ORANGE_Y, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT);
 
 	tft.setCursor(0,0);
@@ -40,8 +41,8 @@ void DisplayStateMachine::drawBackground(){
 	tft.pushImage(0, 0, 320, 240, (uint16_t*)image_data_Background_V2_no_symbol);
 //  tft.setCursor(138,140);
 //  tft.println(String((char)9) + "C");
-	tft.drawBitmap(10, 17, image_data_scale_small, 41, 40, TFT_WHITE);
-	tft.drawBitmap(226, 16, image_data_timer_small, 33, 43, TFT_WHITE);
+//	tft.drawBitmap(10, 17, image_data_scale_small, 41, 40, TFT_WHITE);
+//	tft.drawBitmap(226, 16, image_data_timer_small, 33, 43, TFT_WHITE);
 	displayTime(0);
 	displayWeight(0);
 }
@@ -84,9 +85,9 @@ void DisplayStateMachine::update(){
 
 		// count time up after cooling flush
 		if(coolingFlush && !brewMachine->isCoolingFlush()){
-			if((millis()-brewingStartTime)/1000 >= 99){
-				displayTime(0);
+			if((millis()-brewingStartTime)/1000 >= 99 && (brewingStartTime != 0)){
 				brewingStartTime = 0;
+				displayTime(0);
 				coolingFlush = false;
 			}
 			else if (brewingStartTime == 0){
@@ -236,8 +237,18 @@ void DisplayStateMachine::displayTime(int time){
 		return;
 	}
 	displayedTime = time;
-	tft.fillRect(268, 28, 2*15+3, 21, TFT_BLACK);
-	tft.setCursor(268,28);
+	//tft.fillRect(268, 28, 2*15+3, 21, TFT_BLACK);
+	//tft.setCursor(268,28);
+	tft.pushImage(TEXT_BLUE_X, TEXT_BLUE_Y2, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT, background_blue2);
+//	tft.setCursor(124,71);
+	tft.drawBitmap(TEXT_BLUE_X-35, TEXT_BLUE_Y2-9, image_data_timer_small, 26, 34, TFT_WHITE);
+	if(displayedTime < 10){
+		tft.setCursor(TEXT_BLUE_X + LETTER_WIDTH/2, TEXT_BLUE_Y2);
+	}
+	else{
+		tft.setCursor(TEXT_BLUE_X, TEXT_BLUE_Y2);
+	}
+
 	tft.print(time);
 }
 
@@ -246,7 +257,15 @@ void DisplayStateMachine::displayWeight(int weight){
 		return;
 	}
 	displayedWeight = weight;
-	tft.fillRect(58, 28, 2*15+3, 21, TFT_BLACK);
-	tft.setCursor(58,28);
+	//tft.fillRect(58, 28, 2*15+3, 21, TFT_BLACK);
+	//tft.setCursor(58,28);
+	tft.pushImage(TEXT_BLUE_X, TEXT_BLUE_Y, TEXT_BACKGROUND_WIDTH, TEXT_BACKGROUND_HEIGHT, background_blue);
+	tft.drawBitmap(TEXT_BLUE_X-35, TEXT_BLUE_Y-4, image_data_scale_small, 26, 25, TFT_WHITE);
+	if(displayedWeight < 10){
+		tft.setCursor(TEXT_BLUE_X + LETTER_WIDTH/2, TEXT_BLUE_Y);
+	}
+	else{
+		tft.setCursor(TEXT_BLUE_X, TEXT_BLUE_Y);
+	}
 	tft.println(String(weight));
 }
