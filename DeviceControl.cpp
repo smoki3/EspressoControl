@@ -70,6 +70,7 @@ void DeviceControl::init(){
     mcpReadBuffer = mcp.read();
 
 	pinMode(TEMP_BU_PIN, INPUT);
+	pinMode(TEMP_TUBE_PIN, INPUT);
 	pinMode(FLOW_PUMP_PIN, INPUT);
 	pinMode(FLOW_RET_PIN, INPUT);
 	pinMode(PROBE_DIGITAL_PIN, INPUT);
@@ -299,7 +300,8 @@ bool DeviceControl::getBoilerFull(){
 
 bool DeviceControl::getTankFull(){
 	//todo
-	return (mcpReadBuffer & (1<<TANK_PIN))>0;
+	//return (mcpReadBuffer & (1<<TANK_PIN))>0;
+	return digitalRead(TEMP_TUBE_PIN);
 //	return true;
 }
 
