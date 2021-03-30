@@ -39,7 +39,6 @@
 #define	LED_TANK			6
 #define	LED_RIGHT			7
 
-#define BOILER_TEMP_ON_ADS	//comment to use TSIC for boiler temperature
 #define ADS_BOILER_INPUT	ADS1115_COMP_0_GND
 #define ADS_BOILER_MAX_VOLT	ADS1115_RANGE_4096
 #define ADS_VCC_INPUT		ADS1115_COMP_1_GND

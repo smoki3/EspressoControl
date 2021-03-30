@@ -26,9 +26,8 @@ DeviceControl::~DeviceControl() {
 }
 
 MCP23017 mcp = MCP23017(MCP_ADDR);
-#ifdef BOILER_TEMP_ON_ADS
 ADSTempSensor adsSensor = ADSTempSensor();
-#endif
+
 /// initializes all pins and interrupts etc. necessary
 void DeviceControl::init(){
 	Wire.begin();
@@ -76,9 +75,7 @@ void DeviceControl::init(){
 	pinMode(TFT_LED, OUTPUT);
 	digitalWrite(TFT_LED, LOW);
 
-#ifdef BOILER_TEMP_ON_ADS
 	adsSensor.init();
-#endif
 
 	tsicBU = new TSIC(TEMP_BU_PIN);
 	attachInterrupt(TEMP_BU_PIN, tsicBUWrapper, CHANGE);
@@ -145,9 +142,7 @@ void DeviceControl::update(){
 	buttonManDist->update();
 	buttonVolDist->update();
 
-#ifdef BOILER_TEMP_ON_ADS
 	adsSensor.update();
-#endif
 }
 
 /// enables the boiler heater
