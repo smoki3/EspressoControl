@@ -42,9 +42,9 @@
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.5/variants/nodemcu-32s</locationURI>
 		</link>
 		<link>
-			<name>libraries/Adafruit_ADS1X15</name>
+			<name>libraries/ADS1115_WE</name>
 			<type>2</type>
-			<location>/Users/kevinbayer/Development/Arduino/libraries/Adafruit_ADS1X15</location>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/ADS1115_WE/1.3.0</locationURI>
 		</link>
 		<link>
 			<name>libraries/AsyncTCP</name>

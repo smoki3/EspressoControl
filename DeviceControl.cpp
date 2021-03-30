@@ -26,7 +26,9 @@ DeviceControl::~DeviceControl() {
 }
 
 MCP23017 mcp = MCP23017(MCP_ADDR);
-Adafruit_ADS1115 ads(ADS_ADDR);
+#ifdef BOILER_TEMP_ON_ADS
+ADSTempSensor adsSensor = ADSTempSensor();
+#endif
 /// initializes all pins and interrupts etc. necessary
 void DeviceControl::init(){
 	Wire.begin();
@@ -45,9 +47,6 @@ void DeviceControl::init(){
 	buttonManDist = new Button([](){return DeviceControl::instance()->readButtonManDist();});
 
 	mcp.init();
-
-	ads.begin();
-	ads.setGain(GAIN_ONE); // 2x gain       0.0625mV
 
     BUHeaterOff(false);
     boilerHeaterOff(false);
@@ -76,6 +75,10 @@ void DeviceControl::init(){
 	pinMode(PROBE_DIGITAL_PIN, INPUT);
 	pinMode(TFT_LED, OUTPUT);
 	digitalWrite(TFT_LED, LOW);
+
+#ifdef BOILER_TEMP_ON_ADS
+	adsSensor.init();
+#endif
 
 	tsicBU = new TSIC(TEMP_BU_PIN);
 	attachInterrupt(TEMP_BU_PIN, tsicBUWrapper, CHANGE);
@@ -141,6 +144,10 @@ void DeviceControl::update(){
 	button2->update();
 	buttonManDist->update();
 	buttonVolDist->update();
+
+#ifdef BOILER_TEMP_ON_ADS
+	adsSensor.update();
+#endif
 }
 
 /// enables the boiler heater
@@ -360,21 +367,11 @@ double DeviceControl::getBypassVolume(){
 }
 
 double	DeviceControl::getBoilerTemp(){
-	ads.setGain(GAIN_ONE);
-	adsVoltageMain = ads.readADC_SingleEnded(0);
-	adsVoltageMain = (adsVoltageMain * 0.125)/1000;		//Get Power Supply Voltage
-	ads.setGain(GAIN_TWO);
-	adsVoltageNTC = ads.readADC_SingleEnded(1);
-	adsVoltageNTC = (adsVoltageNTC * 0.0625)/1000;		//Get NTC Voltage
-	adsRes = (adsVoltageNTC * RESISTOR_VALUE)/(adsVoltageMain - adsVoltageNTC);
-	adsTemp = (1/(((double)1/298.15)+((double)1/NTC_BETA_VALUE)*log((double)adsRes/RESISTOR_VALUE))) - 273.15;
-	return adsTemp;
+	return adsSensor.getBoilerTemp();
 }
 
 bool DeviceControl::getBoilerTempSensorError(){
-	if (getBoilerTemp() <= NTC_SAFE_TEMP_MIN || getBoilerTemp() > NTC_SAFE_TEMP_MAX)
-		return true;
-	return false;
+	return adsSensor.getBoilerTempSensorError();
 }
 
 double DeviceControl::getBUTemp(){
