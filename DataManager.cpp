@@ -121,7 +121,7 @@ double DataManager::bypassTickToVolumeFactor;
 
 #define CHECKSUM_ADDR				218
 #define	CHECKSUM_LEN				4
-#define	EEPROM_SIZE					250
+#define	EEPROM_SIZE					512
 char ssid[SSID_MAX_LEN+1];
 char password[WIFI_PW_MAX_LEN+1];
 char hostName[HOST_NAME_MAX_LEN+1];
@@ -190,6 +190,10 @@ void DataManager::init(){
 	if(dev->readButtonManDist() && dev->readButtonVolDist() && dev->readButton2()){
 		Serial.println("WiFi Setup Mode");
 		WIFISetupMode();
+	}
+	else if(dev->readButtonVolDist() && dev->readButton2()){
+		Serial.println("Reset EEPROM");
+		eepromReset();
 	}
 	//if wifi not intialized correctly, use default values
 	else if(checksum != calculateWIFIChecksum()){
@@ -921,6 +925,57 @@ void DataManager::eepromWrite(uint8_t *src, int addr, int len, bool commit){
 	}
 }
 
+void DataManager::eepromReset(){
+	for (int i = 0; i < EEPROM_SIZE; i++) {
+	   EEPROM.write(i, 0);
+	}
+	EEPROM.commit();
+	delay(1000);
+	Serial.println("Writing default values");
+	targetTempBoiler = DEFAULT_TEMP_BOILER;
+	targetTempBU = DEFAULT_TEMP_BU;
+	distributionVolume = DEFAULT_DISTRIBUTION_VOLUME;
+	volumeOffset = DEFAULT_VOLUME_OFFSET;
+	blynkEnabled = DEFAULT_BLYNK_ENABLED;
+	boilerControllerP = DEFAULT_BOILER_CONTROLLER_P;
+	boilerControllerI = DEFAULT_CONTROLLER_I;
+	boilerControllerD = DEFAULT_CONTROLLER_D;
+	BUControllerP = DEFAULT_BU_CONTROLLER_P;
+	BUControllerI = DEFAULT_CONTROLLER_I;
+	BUControllerD = DEFAULT_CONTROLLER_D;
+	preinfusionBuildupTime = DEFAULT_PREINFUSION_BUILDUP_TIME;
+	preinfusionWaitTime = DEFAULT_PREINFUSION_WAIT_TIME;
+	standbyStartTime = DEFAULT_STANDBY_START_TIME;
+	standbyWakeupTime = DEFAULT_STANDBY_WAKEUP_TIME;
+	pumpTickToVolumeFactor = DEFAULT_PUMP_TICK_TO_VOLUME_FACTOR;
+	bypassTickToVolumeFactor = DEFAULT_BYP_TICK_TO_VOLUME_FACTOR;
+	distributionTime = DEFAULT_DISTRIBUTION_TIME;
+	coolingFlushTime = DEFAULT_COOLING_FLUSH_TIME;
+	eepromWrite((uint8_t*)&targetTempBoiler, TARGET_TEMP_BOILER_ADDR, TARGET_TEMP_BOILER_LEN, false);
+	eepromWrite((uint8_t*)&targetTempBU, TARGET_TEMP_BU_ADDR, TARGET_TEMP_BU_LEN, false);
+	eepromWrite((uint8_t*)&distributionVolume, DIST_VOL_ADDR, DIST_VOL_LEN, false);
+	eepromWrite((uint8_t*)&volumeOffset, VOL_OFFSET_ADDR, VOL_OFFSET_LEN, false);
+	uint8_t temp = blynkEnabled?0xFF:0x00;
+	eepromWrite((uint8_t*)&temp, BLYNK_ENABLED_ADDR, BLYNK_ENABLED_LEN, false);
+	eepromWrite((uint8_t*)&boilerControllerP, BOILER_CONTROLLER_P_ADDR, BOILER_CONTROLLER_P_LEN, false);
+	eepromWrite((uint8_t*)&boilerControllerI, BOILER_CONTROLLER_I_ADDR, BOILER_CONTROLLER_I_LEN, false);
+	eepromWrite((uint8_t*)&boilerControllerD, BOILER_CONTROLLER_D_ADDR, BOILER_CONTROLLER_D_LEN, false);
+	eepromWrite((uint8_t*)&BUControllerP, BU_CONTROLLER_P_ADDR, BU_CONTROLLER_P_LEN, false);
+	eepromWrite((uint8_t*)&BUControllerI, BU_CONTROLLER_I_ADDR, BU_CONTROLLER_I_LEN, false);
+	eepromWrite((uint8_t*)&BUControllerD, BU_CONTROLLER_D_ADDR, BU_CONTROLLER_D_LEN, false);
+	eepromWrite((uint8_t*)&preinfusionBuildupTime, PREINFUSION_BUILDUP_TIME_ADDR, PREINFUSION_BUILDUP_TIME_LEN, false);
+	eepromWrite((uint8_t*)&preinfusionWaitTime, PREINFUSION_WAIT_TIME_ADDR, PREINFUSION_WAIT_TIME_LEN, false);
+	eepromWrite((uint8_t*)&standbyStartTime, STANDBY_START_TIME_ADDR, STANDBY_START_TIME_LEN, false);
+	eepromWrite((uint8_t*)&standbyWakeupTime, STANDBY_WAKEUP_TIME_ADDR, STANDBY_WAKEUP_TIME_LEN, false);
+	eepromWrite((uint8_t*)&pumpTickToVolumeFactor, PUMP_TICK_TO_VOL_FACTOR_ADDR, PUMP_TICK_TO_VOL_FACTOR_LEN, false);
+	eepromWrite((uint8_t*)&bypassTickToVolumeFactor, BYPASS_TICK_TO_VOL_FACTOR_ADDR, BYPASS_TICK_TO_VOL_FACTOR_LEN, false);
+	eepromWrite((uint8_t*)&distributionTime, DIST_TIME_ADDR, DIST_TIME_LEN, false);
+	eepromWrite((uint8_t*)&coolingFlushTime, COOLING_FLUSH_TIME_ADDR, COOLING_FLUSH_TIME_LEN, false);
+	EEPROM.commit();
+	delay(1000);
+	  //ESP.restart();
+}
+
 /**
  * Enters wifi setup mode: machine will create an access point with default SSID and password.
  * On the machine IP address (192.168.4.1) will be a webserver running to set up the new WIFI credentials
@@ -933,10 +988,10 @@ void DataManager::WIFISetupMode(){
 	Serial.println(IP);
 	webserver_init();
 	while(1){
-		dev->enableLEDRight();
+		dev->enableLEDPower();
 		dev->update();
 		delay(500);
-		dev->disableLEDRight();
+		dev->disableLEDPower();
 		dev->update();
 		delay(500);
 		if(scheduleRestart){

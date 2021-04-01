@@ -26,8 +26,8 @@
 
 
 #define TEXT_BLUE_X		160
-#define	TEXT_BLUE_Y		61
-#define	TEXT_BLUE_Y2	95
+#define	TEXT_BLUE_Y		66
+#define	TEXT_BLUE_Y2	99
 #define TEXT_RED_X		29
 #define	TEXT_RED_Y		179
 #define	TEXT_ORANGE_X	210

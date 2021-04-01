@@ -11,8 +11,8 @@
 #include "Arduino.h"
 #include "DeviceControl.h"
 
-#define DEFAULT_TEMP_BOILER		120
-#define	DEFAULT_TEMP_BU			94
+#define DEFAULT_TEMP_BOILER		123.5
+#define	DEFAULT_TEMP_BU			95
 #define	MAX_TEMP_BOILER			125
 #define	MAX_TEMP_BU				110
 #define	MIN_TEMP_BOILER			10
@@ -25,7 +25,7 @@
 #define MAX_BOILER_FILL_MAX_TIME
 #define	MIN_BOILER_FILL_MAX_TIME
 
-#define	DEFAULT_DISTRIBUTION_VOLUME				30
+#define	DEFAULT_DISTRIBUTION_VOLUME				0
 #define	MAX_DISTRIBUTION_VOLUME					200
 #define	MIN_DISTRIBUTION_VOLUME					0
 #define DEFAULT_VOLUME_OFFSET					40
@@ -36,16 +36,16 @@
 #define	MAX_DISTRIBUTION_TIME					200000
 #define	MIN_DISTRIBUTION_TIME					10000
 
-#define	DEFAULT_COOLING_FLUSH_TIME				5000
+#define	DEFAULT_COOLING_FLUSH_TIME				4000
 #define	MAX_COOLING_FLUSH_TIME					50000
 #define	MIN_COOLING_FLUSH_TIME					0000
 
 #define	DEFAULT_BLYNK_ENABLED					true
 
-#define	DEFAULT_BOILER_CONTROLLER_P				60
+#define	DEFAULT_BOILER_CONTROLLER_P				45
 #define	MAX_BOILER_CONTROLLER_P					100
 #define	MIN_BOILER_CONTROLLER_P					0.01
-#define	DEFAULT_BU_CONTROLLER_P					60
+#define	DEFAULT_BU_CONTROLLER_P					45
 #define	MAX_BU_CONTROLLER_P						100
 #define	MIN_BU_CONTROLLER_P						0.01
 #define DEFAULT_CONTROLLER_I					0.1
@@ -54,12 +54,12 @@
 #define DEFAULT_CONTROLLER_D					0
 #define MAX_CONTROLLER_D						100
 #define MIN_CONTROLLER_D						0
-#define DEFAULT_PUMP_TICK_TO_VOLUME_FACTOR		0.448
-#define DEFAULT_BYP_TICK_TO_VOLUME_FACTOR		0.4579
+#define DEFAULT_PUMP_TICK_TO_VOLUME_FACTOR		0.5200
+#define DEFAULT_BYP_TICK_TO_VOLUME_FACTOR		0.5205
 #define MIN_TICK_TO_VOLUME_FACTOR				0.001
-#define	MAX_TICK_TO_VOLUME_FACTOR				10
+#define	MAX_TICK_TO_VOLUME_FACTOR				1
 
-#define DEFAULT_PREINFUSION_BUILDUP_TIME		2000
+#define DEFAULT_PREINFUSION_BUILDUP_TIME		0
 #define	MAX_PREINFUSION_BUILDUP_TIME			20000
 #define	DEFAULT_PREINFUSION_WAIT_TIME			5000
 #define	MAX_PREINFUSION_WAIT_TIME				20000
@@ -67,7 +67,7 @@
 #define	IDLE_BLYNK_MIN_TEMP_UPDATE_INTERVAL		3000
 #define	BREWING_BLYNK_MIN_TEMP_UPDATE_INTERVAL	500
 
-#define DEFAULT_STANDBY_START_TIME				90*60*1000 // time after which standby mode will be entered if no user action
+#define DEFAULT_STANDBY_START_TIME				0 			// time after which standby mode will be entered if no user action
 #define DEFAULT_STANDBY_WAKEUP_TIME				-1			//time in s after midnight at which the device will wake up from standby, -1 to disable wakeup
 
 #define WIFI_CONNECT_INTERVAL					10000	//interval in which the device tries to connect to wifi
@@ -169,6 +169,7 @@ private:
 	static void eepromWrite(uint8_t *src, int addr, int len, bool commit);
 	static void eepromRead(uint8_t *dst, int addr, int len);
 	static void WIFISetupMode();
+	static void eepromReset();
 
 	static bool scheduleRestart;
 
