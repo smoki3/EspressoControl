@@ -302,8 +302,7 @@ bool DeviceControl::getBoilerFull(){
 
 bool DeviceControl::getTankFull(){
 	//todo
-	//return (mcpReadBuffer & (1<<TANK_PIN))>0;
-	return digitalRead(TEMP_TUBE_PIN);
+	return (mcpReadBuffer & (1<<TANK_PIN))>0;
 //	return true;
 }
 

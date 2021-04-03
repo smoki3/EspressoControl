@@ -20,9 +20,9 @@
 							<tool id="io.sloeber.tool.sketch.compiler.cpp.803092337" name="Arduino C++ Compiler" superClass="io.sloeber.tool.sketch.compiler.cpp">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.cpp.sketch.option.incpath.838584187" name="Include Paths (-I)" superClass="io.sloeber.compiler.cpp.sketch.option.incpath" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/AsyncTCP/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/ESPAsyncWebServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/AsyncTCP/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/ESPAsyncWebServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Time}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/TFT_eSPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/PID}&quot;"/>
@@ -41,9 +41,9 @@
 							<tool id="io.sloeber.tool.compiler.c.1267697479" name="Arduino C Compiler" superClass="io.sloeber.tool.compiler.c">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.c.sketch.option.incpath.711534221" name="Include Paths (-I)" superClass="io.sloeber.compiler.c.sketch.option.incpath" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/AsyncTCP/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/ESPAsyncWebServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/core/variant}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/AsyncTCP/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/ESPAsyncWebServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Time}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/TFT_eSPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/PID}&quot;"/>
@@ -62,14 +62,14 @@
 							<tool id="io.sloeber.tool.sketch.compiler.s.842520975" name="Arduino Assembler" superClass="io.sloeber.tool.sketch.compiler.s">
 								<option IS_BUILTIN_EMPTY="false" IS_VALUE_EMPTY="false" id="io.sloeber.compiler.asm.sketch.option.incpath.702835728" name="Include Paths (-I)" superClass="io.sloeber.compiler.asm.sketch.option.incpath" useByScannerDiscovery="false" valueType="includePath">
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/core/core}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/ESPAsyncWebServer/src}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/${ProjName}/libraries/AsyncTCP/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/core/variant}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Time}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/TFT_eSPI}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/PID}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/AsyncTCP/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Blynk/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/EEPROM/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/ESPAsyncWebServer/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/FS/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/MCP23017/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/SPI/src}&quot;"/>
