@@ -13,7 +13,7 @@
 #define ADS_MIN_UPDATE_INTERVAL	5000	//the sensor will be in error state if no new measurements will have been received
 										//after this time
 //plausibility checks:
-#define ADS_PLAUSIBILITY_MAX_BOILER_TEMP		130
+#define ADS_PLAUSIBILITY_MAX_BOILER_TEMP		135
 #define ADS_PLAUSIBILITY_MIN_BOILER_TEMP		-1
 #define ADS_PLAUSIBILITY_MAX_BOILER_TEMP_JUMP	10
 #define ADS_PLAUSIBILITY_STAY_IN_ERROR_TIME		30000	//time in ms after which error will be reset

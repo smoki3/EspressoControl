@@ -13,6 +13,10 @@
 #include <PID_v1.h>
 
 //#define BOILER_QUICKSTART
+#define BOILER_SOFTSTART
+#define BOILER_SOFTSTART_OFFSET_TEMP	10
+#define BOILER_SOFTSTART_TIME			5*60*1000
+
 
 class BoilerStateMachine {
 	enum BoilerStates {enabled, disabled};
@@ -26,7 +30,9 @@ private:
 	DeviceControl *dev;
 	MachineStatusStateMachine *machStat;
 	bool quickStart;
+	bool softStart;
 	double pid_input;
+	long softStartTime;
 	double pid_output;
 	double pid_setpoint;
 	PID *boilerPID;

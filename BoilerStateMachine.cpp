@@ -15,6 +15,12 @@ BoilerStateMachine::BoilerStateMachine() {
 #else
 	quickStart = false;
 #endif
+#ifdef BOILER_SOFTSTART
+	softStart = true;
+#else
+	softStart = false;
+#endif
+
 	dev = DeviceControl::instance();
 	machStat = MachineStatusStateMachine::instance();
 	pid_input = dev->getBoilerTemp();
@@ -24,6 +30,7 @@ BoilerStateMachine::BoilerStateMachine() {
 			DataManager::getBoilerControllerI(), DataManager::getBoilerControllerD(), DIRECT);
 	boilerPID->SetOutputLimits(0, 100);
 	boilerPID->SetMode(AUTOMATIC);
+	softStartTime = 0;
 }
 
 BoilerStateMachine::~BoilerStateMachine() {
@@ -43,10 +50,24 @@ void BoilerStateMachine::update(){
 		break;
 	case enabled:
 		pid_input = dev->getBoilerTemp();
-		pid_setpoint = DataManager::getTargetTempBoiler();
+
+		if(softStart){
+			if(softStartTime == 0){
+				softStartTime = millis();
+			}
+			pid_setpoint = DataManager::getTargetTempBoiler() - BOILER_SOFTSTART_OFFSET_TEMP;
+			if(millis() > softStartTime + BOILER_SOFTSTART_TIME){
+				softStart = false;
+			}
+		}
+		else{
+			pid_setpoint = DataManager::getTargetTempBoiler();
+		}
+
 		boilerPID->SetTunings(DataManager::getBoilerControllerP(), DataManager::getBoilerControllerI(),
 				DataManager::getBoilerControllerD());
 		boilerPID->Compute();
+
 		//set outputs
 		if(quickStart){
 			dev->enableBoilerHeater(100);

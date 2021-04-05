@@ -16,7 +16,7 @@
 #include "Wire.h"
 #include "Button.h"
 
-#define SSR_PERIOD_TIME			5000
+#define SSR_PERIOD_TIME			2500
 #define	BUTTON_DEPRELL_TIME		300
 #define DIST_SWITCH_DEPRELL_TIME	100
 #define	BUTTON_LONG_PRESS_TIME	3000
