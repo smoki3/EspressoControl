@@ -7,7 +7,7 @@
 
 #include "ADSTempSensor.h"
 
-Adafruit_ADS1115 ads;
+ADS1115_WE adc(ADS_ADDR);
 
 ADSTempSensor::ADSTempSensor() {
 	boilerTempSensorError = false;
@@ -23,28 +23,42 @@ ADSTempSensor::~ADSTempSensor() {
 
 
 void ADSTempSensor::init(){
-	ads.begin(ADS_ADDR);
+	pinMode(ADS_RDY, INPUT_PULLUP);
+	if(!adc.init()){
+	    Serial.println("ADS1115 not connected!");
+	    boilerTempSensorError = true;
+	}
+	adc.setAlertPinMode(ADS1115_ASSERT_AFTER_1);
+	adc.setMeasureMode(ADS1115_SINGLE);
+	adc.setAlertPol(ADS1115_ACT_LOW);
+	adc.setAlertPinToConversionReady();
 }
 
 void ADSTempSensor::update(){
 	if(millis() >= lastUpdateTime + ADS_SAMPLE_INTERVAL){
 		switch (state){
 		case IDLE:
-			ads.setGain(GAIN_ONE);
-			boilerVoltage = ads.readADC_SingleEnded(0);
-			boilerVoltage = (boilerVoltage * 0.125)/1000;
+			adc.setVoltageRange_mV(ADS_BOILER_MAX_VOLT);
+			adc.setCompareChannels(ADS_BOILER_INPUT);
+			adc.startSingleMeasurement();
 			state = measureBoiler;
 			break;
 		case measureBoiler:
-			ads.setGain(GAIN_TWO);
-			supplyVoltage = ads.readADC_SingleEnded(1);
-			supplyVoltage = (supplyVoltage * 0.0625)/1000;		//Get NTC Voltage
-			state = measureVCC;
+			if(!digitalRead(ADS_RDY)){
+				boilerVoltage = adc.getResult_mV();
+				adc.setVoltageRange_mV(ADS_VCC_MAX_VOLT);
+				adc.setCompareChannels(ADS_VCC_INPUT);
+				adc.startSingleMeasurement();
+				state = measureVCC;
+			}
 			break;
 		case measureVCC:
-			calculateBoilerTemp();
-			state = IDLE;
-			lastUpdateTime = millis();
+			if(!digitalRead(ADS_RDY)){
+				supplyVoltage = adc.getResult_mV();
+				calculateBoilerTemp();
+				state = IDLE;
+				lastUpdateTime = millis();
+			}
 			break;
 		}
 	}

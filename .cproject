@@ -34,8 +34,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/SPIFFS/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Wire/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Adafruit_ADS1X15}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Adafruit_BusIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/ADS1115_WE/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.cpp.sketch.input.121595934" name="CPP source files" superClass="io.sloeber.compiler.cpp.sketch.input"/>
 							</tool>
@@ -56,8 +55,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/SPIFFS/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Wire/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Adafruit_ADS1X15}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Adafruit_BusIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/ADS1115_WE/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.c.sketch.input.1819676818" name="C Source Files" superClass="io.sloeber.compiler.c.sketch.input"/>
 							</tool>
@@ -78,8 +76,7 @@
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/SPIFFS/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/WiFi/src}&quot;"/>
 									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Wire/src}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Adafruit_ADS1X15}&quot;"/>
-									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/Adafruit_BusIO}&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;${workspace_loc:/Espressomaschine/libraries/ADS1115_WE/src}&quot;"/>
 								</option>
 								<inputType id="io.sloeber.compiler.S.sketch.input.1888385726" name="Assembly source files" superClass="io.sloeber.compiler.S.sketch.input"/>
 							</tool>

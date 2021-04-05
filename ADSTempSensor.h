@@ -8,7 +8,7 @@
 #ifndef ADSTEMPSENSOR_H_
 #define ADSTEMPSENSOR_H_
 #include "HW_config.h"
-#include "Adafruit_ADS1X15.h"
+#include "ADS1115_WE.h"
 
 #define ADS_MIN_UPDATE_INTERVAL	5000	//the sensor will be in error state if no new measurements will have been received
 										//after this time
