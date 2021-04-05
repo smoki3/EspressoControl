@@ -18,7 +18,7 @@
 #define MCP_SDA				21
 #define MCP_ADDR			0x21
 #define ADS_ADDR			0x48
-#define ADS_RDY				12
+#define ADS_RDY				26
 #define ADS_SAMPLE_INTERVAL	100		//sample interval in ms
 
 #define	BU_VALVE			9
