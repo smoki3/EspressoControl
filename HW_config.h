@@ -8,8 +8,6 @@
 #ifndef HW_CONFIG_H_
 #define HW_CONFIG_H_
 
-#include "ADS1115_WE.h"
-
 #define SR_SER				22
 #define	SR_SCK				19
 #define	SR_RCK				20
@@ -18,7 +16,6 @@
 #define MCP_SDA				21
 #define MCP_ADDR			0x21
 #define ADS_ADDR			0x48
-#define ADS_RDY				12
 #define ADS_SAMPLE_INTERVAL	100		//sample interval in ms
 
 #define	BU_VALVE			9
@@ -39,11 +36,7 @@
 #define	LED_TANK			6
 #define	LED_RIGHT			7
 
-#define ADS_BOILER_INPUT	ADS1115_COMP_1_GND
-#define ADS_BOILER_MAX_VOLT	ADS1115_RANGE_4096
-#define ADS_VCC_INPUT		ADS1115_COMP_0_GND
-#define ADS_VCC_MAX_VOLT	ADS1115_RANGE_2048
-#define ADS_VCC_CONV_FACTOR	2	//(R27+R28)/R28
+#define ADS_VCC_CONV_FACTOR	1	//(R27+R28)/R28
 #define ADS_BOILER_REF_R	10000	//R29
 //calculate NTC temperature:	(see Wikipedia)
 // 1/T = 1/TN + 1/B*ln(RT/RN) with
