@@ -23,7 +23,7 @@ ADSTempSensor::~ADSTempSensor() {
 
 
 void ADSTempSensor::init(){
-	pinMode(ADS_RDY, INPUT_PULLUP);
+	pinMode(ADS_RDY, INPUT);
 	if(!adc.init()){
 	    Serial.println("ADS1115 not connected!");
 	    boilerTempSensorError = true;
