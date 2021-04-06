@@ -169,6 +169,7 @@ private:
 	static void eepromWrite(uint8_t *src, int addr, int len, bool commit);
 	static void eepromRead(uint8_t *dst, int addr, int len);
 	static void WIFISetupMode();
+	static void OTAUpdateMode();
 	static void eepromReset();
 
 	static bool scheduleRestart;

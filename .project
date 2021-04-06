@@ -102,6 +102,16 @@
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/libraries/Time/1.5.0</locationURI>
 		</link>
 		<link>
+			<name>libraries/Update</name>
+			<type>2</type>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.6/libraries/Update</locationURI>
+		</link>
+		<link>
+			<name>libraries/WebServer</name>
+			<type>2</type>
+			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.6/libraries/WebServer</locationURI>
+		</link>
+		<link>
 			<name>libraries/WiFi</name>
 			<type>2</type>
 			<locationURI>ECLIPSE_HOME/arduinoPlugin/packages/esp32/hardware/esp32/1.0.6/libraries/WiFi</locationURI>

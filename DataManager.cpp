@@ -8,6 +8,7 @@
 #include "DataManager.h"
 #include "DeviceControl.h"
 #include "Webserver.h"
+#include "OTAUpdate.h"
 #include "WIFI_config.h"
 
 #include <WiFi.h>
@@ -129,7 +130,7 @@ char hostName[HOST_NAME_MAX_LEN+1];
 char auth[] = BLYNK_AUTH_KEY;
 
 BlynkTimer timer;
-WidgetRTC rtc;
+WidgetRTC rtc; // @suppress("Type cannot be resolved")
 
 
 void DataManager::init(){
@@ -188,12 +189,16 @@ void DataManager::init(){
 
 	//enter wifi setup mode
 	if(dev->readButtonManDist() && dev->readButtonVolDist() && dev->readButton2()){
-		Serial.println("WiFi Setup Mode");
-		WIFISetupMode();
-	}
-	else if(dev->readButtonVolDist() && dev->readButton2()){
 		Serial.println("Reset EEPROM");
 		eepromReset();
+	}
+	else if(dev->readButtonManDist() && dev->readButton2()){
+		Serial.println("Flash Mode"); //Tank LED blinking
+		OTAUpdateMode();
+	}
+	else if(dev->readButtonVolDist() && dev->readButton2()){
+		Serial.println("WiFi Setup Mode"); //POWER LED blinking
+		WIFISetupMode();
 	}
 	//if wifi not intialized correctly, use default values
 	else if(checksum != calculateWIFIChecksum()){
@@ -992,6 +997,33 @@ void DataManager::WIFISetupMode(){
 		dev->update();
 		delay(500);
 		dev->disableLEDPower();
+		dev->update();
+		delay(500);
+		if(scheduleRestart){
+			scheduleRestart = false;
+			delay(1000);
+			ESP.restart();
+		}
+	}
+}
+
+/**
+ * Enters wifi setup mode: machine will create an access point with default SSID and password.
+ * On the machine IP address (192.168.4.1) will be a webserver running to set up the new WIFI credentials
+ * No regular operation will be possible in this mode
+ */
+void DataManager::OTAUpdateMode(){
+	WiFi.softAP(DEFAULT_SSID, DEFAULT_PASSWORD);
+	IPAddress IP = WiFi.softAPIP();
+	Serial.print("AP IP address: ");
+	Serial.println(IP);
+	otaUpdate_init();
+	while(1){
+		otaUpdate_update();
+		dev->enableLEDTank();
+		dev->update();
+		delay(500);
+		dev->disableLEDTank();
 		dev->update();
 		delay(500);
 		if(scheduleRestart){
