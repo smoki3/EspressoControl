@@ -9,9 +9,9 @@
 #include "DataManager.h"
 
 BrewStateMachine::BrewStateMachine() {
-	cleaningBuildupTime = 20000;
+	cleaningBuildupTime = 12000;
 	cleaningFlushingTime = 20000;
-	numberCleaningCycles = 10;
+	numberCleaningCycles = 6;
 	currentCleaningCycle = 0;
 	state = idle;
 	dev = DeviceControl::instance();

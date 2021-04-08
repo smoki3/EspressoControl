@@ -52,12 +52,12 @@ void BoilerStateMachine::update(){
 		pid_input = dev->getBoilerTemp();
 
 		if(softStart){
-			if(softStartTime == 0){
+			if(softStartTime == 0 && (DataManager::getTargetTempBoiler() - dev->getBoilerTemp()) < BOILER_SOFTSTART_OFFSET_TEMP){
 				softStartTime = millis();
 			}
 			pid_setpoint = DataManager::getTargetTempBoiler() - BOILER_SOFTSTART_OFFSET_TEMP;
-			if(millis() > softStartTime + BOILER_SOFTSTART_TIME ||
-					(DataManager::getTargetTempBoiler() - dev->getBoilerTemp()) < BOILER_SOFTSTART_OFFSET_TEMP){
+			if(millis() > softStartTime + BOILER_SOFTSTART_TIME){
+				softStartTime = 0;
 				softStart = false;
 			}
 		}
