@@ -15,8 +15,8 @@
 //plausibility checks:
 #define ADS_PLAUSIBILITY_MAX_BOILER_TEMP		135
 #define ADS_PLAUSIBILITY_MIN_BOILER_TEMP		-1
-#define ADS_PLAUSIBILITY_MAX_BOILER_TEMP_JUMP	15
-#define ADS_PLAUSIBILITY_STAY_IN_ERROR_TIME		30000	//time in ms after which error will be reset
+#define ADS_PLAUSIBILITY_MAX_BOILER_TEMP_JUMP	10
+#define ADS_PLAUSIBILITY_STAY_IN_ERROR_TIME		15000	//time in ms after which error will be reset
 
 class ADSTempSensor {
 	enum adsStates{IDLE, measureBoiler, measureVCC};

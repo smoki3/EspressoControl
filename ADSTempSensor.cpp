@@ -23,7 +23,7 @@ ADSTempSensor::~ADSTempSensor() {
 
 
 void ADSTempSensor::init(){
-	pinMode(ADS_RDY, INPUT);
+	pinMode(ADS_RDY, INPUT_PULLUP);
 	if(!adc.init()){
 	    Serial.println("ADS1115 not connected!");
 	    boilerTempSensorError = true;
@@ -91,8 +91,13 @@ void ADSTempSensor::calculateBoilerTemp(){
 
 void ADSTempSensor::checkBoilerTempSensorForError(){
 	bool error = false;
+	static double lastBoilerTemp = -1;
 	static long lastErrorFoundTime = 0;
-	if(millis() > lastErrorFoundTime + ADS_PLAUSIBILITY_STAY_IN_ERROR_TIME){
+	if(millis() > lastErrorFoundTime + ADS_PLAUSIBILITY_STAY_IN_ERROR_TIME && boilerTempSensorError == true){
+		lastErrorFoundTime = 0;
+		boilerTemp = -1;
+		lastBoilerTemp = -1;
+		lastUpdateTime = millis();
 		boilerTempSensorError = false;
 	}
 	if(millis() >= lastUpdateTime + ADS_MIN_UPDATE_INTERVAL)
@@ -101,7 +106,6 @@ void ADSTempSensor::checkBoilerTempSensorForError(){
 		error = true;
 	if(boilerTemp < ADS_PLAUSIBILITY_MIN_BOILER_TEMP)
 		error = true;
-	static double lastBoilerTemp = -1;
 	if(lastBoilerTemp != -1 && abs(boilerTemp-lastBoilerTemp) > ADS_PLAUSIBILITY_MAX_BOILER_TEMP_JUMP)
 		error = true;
 	lastBoilerTemp = boilerTemp;
